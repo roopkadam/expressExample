@@ -1,10 +1,13 @@
 const express = require('express');
 const fs = require('fs');
-
+var app = express();
+app.set('view engine', 'html');
+app.engine('.html', require('ejs').renderFile);
+app.set('views',__dirname+'/view');
 //takes the port number from heroku process.env is used to take port number
 //if it does'nt get any port number it will run locally through port no 3000
 const port = process.env.PORT || 3000;
-var app = express();
+
 
 app.use(express.static(__dirname + '/help'));//use to run help.html page
 
@@ -19,6 +22,7 @@ next();
 app.get('/', (req,res) => {
 	// res.send('<h1>Hello express</h1');
 	res.send({
+		pageTitle: 'About',
 		name:'roop',
 		likes: [
 		'Biking',
@@ -27,8 +31,18 @@ app.get('/', (req,res) => {
 });
 
 app.get('/about', (req,res) =>{ //it will show about page
-	res.send('aboutme page')
+	res.render('about',{
+		pageTitle: 'About'
+	});
 });
+
+app.get('/projects',(req,res)=>{
+	res.render('projects',{
+		pageTitle: 'Projects'
+	});
+});
+
+
 
 app.get('/help', (req,res) =>{
 	res.send('help --------- page')
